@@ -29,16 +29,21 @@ public class BlobStorage implements Storage {
         }
     }
 
-    public List<String> listNames() {
-        throw new UnsupportedOperationException();
+    public List<String> listNames()
+    {
+        return blobContainerClient.listBlobs()
+                .stream()
+                .map(BlobItem::getName)
+                .collect(Collectors.toList());
     }
-
     public void save(String name, InputStream inputStream, long contentLength) {
-        throw new UnsupportedOperationException();
+        BlobClient blobClient = blobContainerClient.getBlobClient(name);
+        blobClient.upload(inputStream, contentLength);
     }
 
     public InputStream read(String name) {
-        throw new UnsupportedOperationException();
+        BlobClient blobClient = blobContainerClient.getBlobClient(name);
+        return blobClient.openInputStream();
     }
 
 }
